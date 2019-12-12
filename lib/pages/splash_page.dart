@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:netease_cloud_music/application.dart';
+import 'package:netease_cloud_music/provider/user_model.dart';
+import 'package:netease_cloud_music/utils/navigator_util.dart';
+import 'package:provider/provider.dart';
 
 class SplashPage extends StatefulWidget {
   SplashPage({Key key}) : super(key: key);
@@ -27,15 +32,45 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
 
     _logoController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        Future.delayed(Duration(microseconds: 1000), () {});
+        Future.delayed(Duration(microseconds: 1000), () {
+          UserModel userModel = Provider.of<UserModel>(context);
+          userModel.initUser();
+          if (userModel.user != null) {
+            NavigatorUtil.goHomePage(context);
+          } else {
+            NavigatorUtil.goLoginPage(context);
+          }
+        });
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text('data'),
+    ScreenUtil.instance = ScreenUtil(width: 750, height: 1334)..init(context);
+    final size = MediaQuery.of(context).size;
+    Application.screenWidth = size.width;
+    Application.screenHeight = size.height;
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Container(
+        height: double.infinity,
+        width: double.infinity,
+        child: ScaleTransition(
+          scale: _logoAnimation,
+          child: Hero(
+            tag: 'logo',
+            child: Image.asset('images/icon_logo.png'),
+          ),
+        ),
+      ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _logoController.dispose();
   }
 }

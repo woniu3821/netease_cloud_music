@@ -4,12 +4,18 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:netease_cloud_music/application.dart';
 import 'package:netease_cloud_music/model/album.dart';
 import 'package:netease_cloud_music/model/banner.dart' as mBanner;
 import 'package:netease_cloud_music/model/daily_songs.dart';
+import 'package:netease_cloud_music/model/event.dart' as prefix0;
 import 'package:netease_cloud_music/model/mv.dart';
+import 'package:netease_cloud_music/model/play_list.dart';
 import 'package:netease_cloud_music/model/recommend.dart';
 import 'package:netease_cloud_music/model/user.dart';
+import 'package:netease_cloud_music/route/navigate_service.dart';
+import 'package:netease_cloud_music/route/routes.dart';
+import 'package:netease_cloud_music/utils/utils.dart';
 import 'package:netease_cloud_music/widgets/loading.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -32,20 +38,38 @@ class NetUtils {
       );
   }
 
-  static Future<Response> _get(BuildContext context, String url,
-      {Map<String, dynamic> params}) async {
-    Loading.showLoading(context);
+  static Future<Response> _get(
+    BuildContext context,
+    String url, {
+    Map<String, dynamic> params,
+    bool isShowLoading = true,
+  }) async {
+    if (isShowLoading) Loading.showLoading(context);
     try {
       return await _dio.get(url, queryParameters: params);
     } on DioError catch (e) {
-      if (e.response is Map) {
-        return Future.value(e.response);
+      if (e == null) {
+        return Future.error(Response(data: -1));
+      } else if (e.response != null) {
+        if (e.response.statusCode >= 300 && e.response.statusCode < 400) {
+          _reLogin();
+          return Future.error(Response(data: -1));
+        } else {
+          return Future.value(e.response);
+        }
       } else {
-        return Future.error(0);
+        return Future.error(Response(data: -1));
       }
     } finally {
       Loading.hideLoading(context);
     }
+  }
+
+  static void _reLogin() {
+    Future.delayed(Duration(microseconds: 200), () {
+      Application.getIt<NavigateService>().popAndPushNamed(Routes.login);
+      Utils.showToatst('登录失效，请重新登录');
+    });
   }
 
   ///登录
@@ -88,12 +112,32 @@ class NetUtils {
   }
 
   //每日推荐歌曲
-
   static Future<DailySongsData> getDailySongData(BuildContext context) async {
     var response = await _get(
       context,
       '/recommend/songs',
     );
     return DailySongsData.fromJson(response.data);
+  }
+
+  /// 获取个人歌单
+  static Future<MyPlayListData> getSelfPlaylistData(BuildContext context,
+      {@required Map<String, dynamic> params}) async {
+    var response = await _get(
+      context,
+      '/user/playlist',
+      params: params,
+      isShowLoading: false,
+    );
+
+    return MyPlayListData.fromJson(response.data);
+  }
+
+  // 获取动态数据
+  static Future<prefix0.EventData> getEventData(
+      {@required Map<String, dynamic> params}) async {
+    var response =
+        await _get(null, '/event', params: params, isShowLoading: false);
+    return prefix0.EventData.fromJson(response.data);
   }
 }

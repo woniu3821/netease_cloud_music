@@ -1,9 +1,12 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:netease_cloud_music/route/route_handles.dart';
 
 class Routes {
   static String root = "/";
+  static String home = '/home';
   static String login = "/login";
+  static String dailySongs = '/daily_songs';
 
   static void configureRoutes(Router router) {
     router.notFoundHandler = new Handler(
@@ -11,5 +14,10 @@ class Routes {
       print("ROUTE WAS NOT FOUND !!!");
       return null;
     });
+
+    router.define(
+      root,
+      handler: splashHandler,
+    );
   }
 }
