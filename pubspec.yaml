@@ -14,7 +14,7 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.1.0 <3.0.0'
+  sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -37,6 +37,7 @@ dependencies:
   extended_image: ^0.6.7
   get_it: ^3.0.3
   loading_more_list: ^1.0.2
+  audioplayers: ^0.13.5
 
 dev_dependencies:
   flutter_test:

@@ -42,4 +42,9 @@ class NavigatorUtil {
   static void goDailySongsPage(BuildContext context) {
     _navigateTo(context, Routes.dailySongs);
   }
+
+  //搜索页面
+  static void goSearchPage(BuildContext context) {
+    _navigateTo(context, Routes.search);
+  }
 }

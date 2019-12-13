@@ -81,6 +81,16 @@ class NetUtils {
     return User.fromJson(response.data);
   }
 
+  static Future<Response> refreshLogin(BuildContext context) async {
+    return await _get(
+      context,
+      '/login/refresh',
+      isShowLoading: false,
+    ).catchError((e) {
+      Utils.showToatst('网络错误！');
+    });
+  }
+
   //首页banner
   static Future<mBanner.Banner> getBannerData(BuildContext context) async {
     var response = await _get(context, '/banner', params: {'type': 1});
