@@ -23,10 +23,10 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _controller =
-        AnimationController(vsync: this, duration: Duration(microseconds: 300));
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
     _animation = CurvedAnimation(parent: _controller, curve: Curves.linear);
 
-    Future.delayed(Duration(microseconds: 500), () {
+    Future.delayed(Duration(milliseconds: 500), () {
       _controller.forward();
     });
   }

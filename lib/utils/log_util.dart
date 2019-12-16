@@ -1,4 +1,4 @@
-class LogoUtil {
+class LogUtil {
   static const String _TAG_DEF = "###common_utils###";
 
   static bool debuggable = false; //是否是debug模式,true: log v 不输出.

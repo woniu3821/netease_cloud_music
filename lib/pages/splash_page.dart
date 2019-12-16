@@ -27,7 +27,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
     super.initState();
     _scaleTween = Tween(begin: 0, end: 1);
     _logoController =
-        AnimationController(vsync: this, duration: Duration(microseconds: 500))
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500))
           ..drive(_scaleTween);
     Future.delayed(Duration(milliseconds: 500), () {
       _logoController.forward();
@@ -37,7 +37,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
 
     _logoController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        Future.delayed(Duration(microseconds: 500), () {
+        Future.delayed(Duration(milliseconds: 500), () {
           goPage();
         });
       }
@@ -65,11 +65,14 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
         }
       });
       Provider.of<PlayListModel>(context).user = userModel.user;
+    } else {
+      NavigatorUtil.goLoginPage(context);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    NetUtils.init();
     ScreenUtil.instance = ScreenUtil(width: 750, height: 1334)..init(context);
     final size = MediaQuery.of(context).size;
     Application.screenWidth = size.width;

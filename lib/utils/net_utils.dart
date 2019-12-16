@@ -9,29 +9,31 @@ import 'package:netease_cloud_music/model/album.dart';
 import 'package:netease_cloud_music/model/banner.dart' as mBanner;
 import 'package:netease_cloud_music/model/daily_songs.dart';
 import 'package:netease_cloud_music/model/event.dart' as prefix0;
+import 'package:netease_cloud_music/model/hot_search.dart';
 import 'package:netease_cloud_music/model/mv.dart';
 import 'package:netease_cloud_music/model/play_list.dart';
 import 'package:netease_cloud_music/model/recommend.dart';
 import 'package:netease_cloud_music/model/user.dart';
 import 'package:netease_cloud_music/route/navigate_service.dart';
 import 'package:netease_cloud_music/route/routes.dart';
+import 'package:netease_cloud_music/utils/custom_log_interceptor.dart';
 import 'package:netease_cloud_music/utils/utils.dart';
 import 'package:netease_cloud_music/widgets/loading.dart';
 import 'package:path_provider/path_provider.dart';
 
 class NetUtils {
   static Dio _dio;
+  static final String baseUrl = 'http://127.0.0.1';
+
   static void init() async {
     //获取沙盒路径，用于存储cookie
     Directory temDir = await getTemporaryDirectory();
     String tempPath = temDir.path;
     CookieJar cj = PersistCookieJar(dir: tempPath);
-    _dio = Dio(BaseOptions(baseUrl: 'http://127.0.0.1:3000'))
+    _dio = Dio(BaseOptions(baseUrl: '$baseUrl:3000', followRedirects: false))
+      ..interceptors.add(CookieManager(cj))
       ..interceptors.add(
-        CookieManager(cj),
-      )
-      ..interceptors.add(
-        LogInterceptor(
+        CustomLogInterceptor(
           responseBody: true,
           requestBody: true,
         ),
@@ -149,5 +151,12 @@ class NetUtils {
     var response =
         await _get(null, '/event', params: params, isShowLoading: false);
     return prefix0.EventData.fromJson(response.data);
+  }
+
+  // 获取热门搜索数据
+  static Future<HotSearchData> getHotSearchData(BuildContext context) async {
+    var response =
+        await _get(context, '/search/hot/detail', isShowLoading: false);
+    return HotSearchData.fromJson(response);
   }
 }

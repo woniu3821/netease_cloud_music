@@ -43,6 +43,11 @@ class NavigatorUtil {
     _navigateTo(context, Routes.dailySongs);
   }
 
+  // 歌单详情
+  static void goPlaySongsPage(BuildContext context) {
+    _navigateTo(context, Routes.playSongs);
+  }
+
   //搜索页面
   static void goSearchPage(BuildContext context) {
     _navigateTo(context, Routes.search);

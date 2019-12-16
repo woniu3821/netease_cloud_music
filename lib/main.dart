@@ -15,7 +15,7 @@ void main() {
   Routes.configureRoutes(router);
   Application.router = router;
   Application.setupLocator();
-  LogoUtil.init(tag: 'NETEASE_MUSIC');
+  LogUtil.init(tag: 'NETEASE_MUSIC');
 
   Provider.debugCheckInvalidValueType = null;
 
