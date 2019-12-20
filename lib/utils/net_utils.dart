@@ -13,6 +13,7 @@ import 'package:netease_cloud_music/model/hot_search.dart';
 import 'package:netease_cloud_music/model/mv.dart';
 import 'package:netease_cloud_music/model/play_list.dart';
 import 'package:netease_cloud_music/model/recommend.dart';
+import 'package:netease_cloud_music/model/search_result.dart';
 import 'package:netease_cloud_music/model/user.dart';
 import 'package:netease_cloud_music/route/navigate_service.dart';
 import 'package:netease_cloud_music/route/routes.dart';
@@ -158,5 +159,14 @@ class NetUtils {
     var response =
         await _get(context, '/search/hot/detail', isShowLoading: false);
     return HotSearchData.fromJson(response);
+  }
+
+  // 综合搜索
+  static Future<SearchMultipleData> searchMultiple(BuildContext context,
+      {@required Map<String, dynamic> params}) async {
+    var response =
+        await _get(context, '/search', params: params, isShowLoading: false);
+
+    return SearchMultipleData.fromJson(response.data);
   }
 }

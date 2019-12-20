@@ -1,3 +1,4 @@
+import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_cloud_music/model/music.dart';
@@ -5,13 +6,17 @@ import 'package:netease_cloud_music/model/search_result.dart';
 import 'package:netease_cloud_music/model/song.dart' as prefix0;
 import 'package:netease_cloud_music/provider/play_songs_model.dart';
 import 'package:netease_cloud_music/utils/navigator_util.dart';
+import 'package:netease_cloud_music/utils/net_utils.dart';
 import 'package:netease_cloud_music/utils/number_utils.dart';
 import 'package:netease_cloud_music/widgets/common_text_style.dart';
 import 'package:netease_cloud_music/widgets/h_empty_view.dart';
 import 'package:netease_cloud_music/widgets/v_empty_view.dart';
+import 'package:netease_cloud_music/widgets/widget_album.dart';
 import 'package:netease_cloud_music/widgets/widget_artists.dart';
+import 'package:netease_cloud_music/widgets/widget_future_builder.dart';
 import 'package:netease_cloud_music/widgets/widget_music_list_item.dart';
 import 'package:netease_cloud_music/widgets/widget_search_play_list.dart';
+import 'package:netease_cloud_music/widgets/widget_search_user.dart';
 import 'package:netease_cloud_music/widgets/widget_search_video.dart';
 import 'package:provider/provider.dart';
 
@@ -61,7 +66,7 @@ class _SearchMultipleResultPageState extends State<SearchMultipleResultPage>
   }
 
   //构建单曲模块
-  Widget _searchSongs(Song song) {
+  Widget _buildSearchSongs(Song song) {
     return Consumer<PlaySongsModel>(
       builder: (context, model, child) {
         List<Widget> children = [];
@@ -236,21 +241,108 @@ class _SearchMultipleResultPageState extends State<SearchMultipleResultPage>
           ]);
   }
 
+  //歌手
+
   Widget _buildSearchArtists(Artist artist) {
-    return _buildModuleTemplate('歌手', contentWidget: [
-      ListView(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        //TODO
-        children: artist.artists.map((a) => ArtistsWidget()).toList(),
-      ),
-    ]);
+    return _buildModuleTemplate(
+      '歌手',
+      contentWidget: [
+        ListView(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          children: artist.artists
+              .map((a) => ArtistsWidget(
+                    picUrl: a.picUrl,
+                    name: a.name,
+                    accountId: a.accountId,
+                  ))
+              .toList(),
+        ),
+      ],
+      moreText: artist.moreText,
+      onMoreTextTap: () {
+        widget.onTapMore(3);
+      },
+    );
+  }
+
+//专辑
+  Widget _buildSearchAlbum(Album album) {
+    return _buildModuleTemplate(
+      '专辑',
+      contentWidget: <Widget>[
+        ListView(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            children: album.albums.map((p) {
+              return AlbumWidget(p.blurPicUrl, p.name,
+                  '${p.artists.map((a) => a.name).toList().join('/')} ${DateUtil.formatDateMs(p.publishTime, format: 'yyyy.MM.dd')}');
+            }).toList()),
+      ],
+      moreText: album.moreText,
+      onMoreTextTap: () {
+        widget.onTapMore(2);
+      },
+    );
+  }
+
+  //用户
+
+  Widget _buildSearchUser(User user) {
+    return _buildModuleTemplate(
+      "用户",
+      contentWidget: <Widget>[
+        ListView(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          children: user.users.map((p) {
+            return SearchUserWidget(
+              name: p.nickname,
+              url: p.avatarUrl,
+              description: p.description,
+            );
+          }).toList(),
+        )
+      ],
+      moreText: user.moreText,
+      onMoreTextTap: () {
+        widget.onTapMore(5);
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text('data'),
+    super.build(context);
+
+    return CustomFutureBuilder<SearchMultipleData>(
+      futureFunc: NetUtils.searchMultiple,
+      params: {'keywords': widget.keywords, 'type': 1018},
+      builder: (context, data) {
+        return ListView(
+          padding: EdgeInsets.symmetric(
+              vertical: ScreenUtil().setWidth(20),
+              horizontal: ScreenUtil().setWidth(20)),
+          children: <Widget>[
+            _buildSearchSongs(data.result.song),
+            VEmptyView(20),
+            _buildSearchPlayList(data.result.playList),
+            VEmptyView(20),
+            _buildSearchVideo(data.result.video),
+            VEmptyView(20),
+            _buildSimQuery(data.result.sim_query),
+            VEmptyView(20),
+            _buildSearchArtists(data.result.artist),
+            VEmptyView(20),
+            _buildSearchAlbum(data.result.album),
+            VEmptyView(20),
+            _buildSearchUser(data.result.user),
+          ],
+        );
+      },
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

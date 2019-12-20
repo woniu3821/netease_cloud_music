@@ -1,12 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:netease_cloud_music/widgets/common_text_style.dart';
+import 'package:netease_cloud_music/widgets/h_empty_view.dart';
+import 'package:netease_cloud_music/widgets/widget_round_img.dart';
 
 class ArtistsWidget extends StatelessWidget {
-  const ArtistsWidget({Key key}) : super(key: key);
+  final String picUrl;
+  final String name;
+  final int accountId;
+
+  const ArtistsWidget({Key key, this.picUrl, this.accountId, this.name})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: child,
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: ScreenUtil().setWidth(15)),
+      child: Row(
+        children: <Widget>[
+          RoundImgWidget(
+            picUrl,
+            120,
+            fit: BoxFit.cover,
+          ),
+          HEmptyView(10),
+          Text(name),
+          Spacer(),
+          accountId == null || accountId == 0
+              ? Container()
+              : Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Icon(
+                      Icons.account_circle,
+                      color: Colors.red,
+                      size: ScreenUtil().setWidth(30),
+                    ),
+                    HEmptyView(5),
+                    Text(
+                      '已入驻',
+                      style: smallGrayTextStyle,
+                    ),
+                  ],
+                )
+        ],
+      ),
     );
   }
 }

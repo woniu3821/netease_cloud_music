@@ -261,7 +261,17 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
         Expanded(
           child: TabBarView(
             children: <Widget>[
-              SearchMultipleResultPage()
+              SearchMultipleResultPage(
+                searchText,
+                onTapMore: (value) {
+                  _searchingTabController.animateTo(value);
+                },
+                onTapSimText: (text) {
+                  searchText = text;
+                  _search();
+                },
+              ),
+              // TODO
               // ..._searchingTabMap.keys.map((key)=>)
             ],
             controller: _searchingTabController,
