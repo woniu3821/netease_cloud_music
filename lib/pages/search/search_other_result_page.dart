@@ -1,14 +1,23 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_cloud_music/model/music.dart';
 import 'package:netease_cloud_music/model/search_result.dart';
-import 'package:netease_cloud_music/model/song.dart';
+import 'package:netease_cloud_music/model/song.dart' as prefix0;
 import 'package:netease_cloud_music/provider/play_songs_model.dart';
+import 'package:netease_cloud_music/utils/navigator_util.dart';
 import 'package:netease_cloud_music/utils/net_utils.dart';
+import 'package:netease_cloud_music/utils/number_utils.dart';
 import 'package:netease_cloud_music/widgets/h_empty_view.dart';
 import 'package:netease_cloud_music/widgets/v_empty_view.dart';
+import 'package:netease_cloud_music/widgets/widget_album.dart';
+import 'package:netease_cloud_music/widgets/widget_artists.dart';
+import 'package:netease_cloud_music/widgets/widget_load_footer.dart';
 import 'package:netease_cloud_music/widgets/widget_music_list_item.dart';
+import 'package:netease_cloud_music/widgets/widget_search_play_list.dart';
+import 'package:netease_cloud_music/widgets/widget_search_user.dart';
+import 'package:netease_cloud_music/widgets/widget_search_video.dart';
 import 'package:provider/provider.dart';
 
 typedef LoadMoreWidgetBuilder<T> = Widget Function(T data);
@@ -153,14 +162,139 @@ class _SearchOtherResultPageState extends State<SearchOtherResultPage>
   }
 
   void _playSongs(PlaySongsModel model, List<Songs> data, int index) {
-    // TODO
-    // model.playSongs(data.map((r)=>Song(r.id));
+    model.playSongs(
+      data
+          .map((r) => prefix0.Song(
+                r.id,
+                name: r.name,
+                picUrl: r.album.picUrl.isEmpty
+                    ? r.album.artist.img1v1Url
+                    : r.album.picUrl,
+                artists: '${r.artists.map((a) => a.name).toList().join('/')}',
+              ))
+          .toList(),
+      index: index,
+    );
+
+    NavigatorUtil.goPlaySongsPage(context);
+  }
+
+  // 构建专辑页面
+  Widget _buildAlbumnPage() {
+    return _buildLoadMoreWidget<Albums>(_albumsData, (curData) {
+      return AlbumWidget(
+          curData.picUrl, curData.name, '${curData.artist.name}');
+    });
+  }
+
+  //构建歌手页面
+  Widget _buildArtistsPage() {
+    return _buildLoadMoreWidget<Artists>(_artistsData, (curData) {
+      return ArtistsWidget(
+        picUrl: curData.picUrl.isEmpty ? curData.img1v1Url : curData.picUrl,
+        name: curData.name,
+        accountId: curData.accountId,
+      );
+    });
+  }
+
+  //构建歌单页面
+  Widget _buildPlayListPage() {
+    return _buildLoadMoreWidget<PlayLists>(_playListData, (curData) {
+      return SearchPlayListWidget(
+        id: curData.id,
+        url: curData.coverImgUrl,
+        name: curData.name,
+        playCount: curData.playCount,
+        info:
+            '${curData.trackCount}首 by${curData.creator.nickname}，播放${NumberUtils.formatNum(curData.playCount)}次',
+      );
+    });
+  }
+
+//构建用户界面
+  Widget _buildUserPage() {
+    return _buildLoadMoreWidget<Users>(_userListData, (curData) {
+      return SearchUserWidget(
+        url: curData.avatarUrl,
+        name: curData.nickname,
+        description: curData.description,
+      );
+    });
+  }
+
+//构建视频页面
+  Widget _buildVideoPage() {
+    return _buildLoadMoreWidget<Videos>(_videosData, (curData) {
+      return SearchVideoWidget(
+        url: curData.coverUrl,
+        playCount: curData.playTime,
+        title: curData.title,
+        type: curData.type,
+        creatorName: curData.creator.map((c) => c.userName).join('/'),
+      );
+    });
+  }
+
+  Widget _buildLoadMoreWidget<T>(
+      List<T> data, LoadMoreWidgetBuilder<T> builder) {
+    return EasyRefresh.custom(
+      slivers: <Widget>[
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              return builder(data[index]);
+            },
+            childCount: data.length,
+          ),
+        ),
+      ],
+      footer: LoadFooter(),
+      controller: _controller,
+      onLoad: () async {
+        offset++;
+        _controller.finishLoad(noMore: _songsData.length >= _count);
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: child,
+    super.build(context);
+
+    if (_count == -1) {
+      return CupertinoActivityIndicator();
+    }
+
+    Widget result;
+
+    switch (int.parse(widget.type)) {
+      case 1: //单曲
+        result = _buildSongsPage();
+        break;
+      case 10: //专辑
+        result = _buildAlbumnPage();
+        break;
+      case 100: //歌手
+        result = _buildArtistsPage();
+        break;
+      case 1000: //歌单
+        result = _buildPlayListPage();
+        break;
+      case 1002: //用户
+        result = _buildUserPage();
+        break;
+      case 1014: //视频
+        result = _buildVideoPage();
+        break;
+    }
+
+    return Padding(
+      padding: EdgeInsets.all(ScreenUtil().setWidth(20)),
+      child: result,
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

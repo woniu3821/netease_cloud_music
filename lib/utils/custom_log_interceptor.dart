@@ -10,7 +10,7 @@ class CustomLogInterceptor extends LogInterceptor {
     responseHeader = true,
     responseBody = false,
     error = true,
-    logPrint,
+    logPrint = print,
   }) : super(
           request: request,
           requestHeader: requestHeader,

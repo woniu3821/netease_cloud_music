@@ -4,6 +4,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:netease_cloud_music/pages/home/home_page.dart';
 import 'package:netease_cloud_music/pages/login_page.dart';
+import 'package:netease_cloud_music/pages/search/search_page.dart';
 import 'package:netease_cloud_music/pages/splash_page.dart';
 
 //首屏splash
@@ -28,5 +29,5 @@ var homeHandler = new Handler(
 
 var searchHandler = new Handler(
     handlerFunc: (BuildContext context, Map<String, List<Object>> params) {
-  return Text('搜索页 SearchPage');
+  return SearchPage();
 });

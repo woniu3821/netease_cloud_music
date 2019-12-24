@@ -56,6 +56,11 @@ class NavigatorUtil {
         "${Routes.playList}?data=${FluroConvertUtils.object2string(data)}");
   }
 
+  // 排行榜首页
+  static void goTopListPage(BuildContext context) {
+    _navigateTo(context, Routes.topList);
+  }
+
   //搜索页面
   static void goSearchPage(BuildContext context) {
     _navigateTo(context, Routes.search);

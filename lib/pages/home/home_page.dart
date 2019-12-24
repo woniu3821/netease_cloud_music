@@ -85,8 +85,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     child: TabBarView(
                       controller: _tabController,
                       children: <Widget>[
-                        // TODO ready
-                        //  DiscoverPage(),
+                         DiscoverPage(),
                         // MyPage(),
                         // EventPage(),
                       ],

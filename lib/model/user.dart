@@ -9,7 +9,7 @@ class User {
   User(
       {int loginType,
       int code,
-        String msg,
+      String msg,
       Account account,
       Profile profile,
       List<Bindings> bindings}) {
@@ -28,7 +28,6 @@ class User {
   int get code => _code;
 
   set code(int code) => _code = code;
-
 
   String get msg => _msg;
 

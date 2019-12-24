@@ -69,27 +69,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   }
 }
 
-class _LoginAnimatedWidget extends AnimatedWidget {
-  final Tween<double> _opacityTween = Tween(begin: 0, end: 1);
-  final Tween<double> _offsetTween = Tween(begin: 40, end: 0);
-  final Animation animation;
-
-  _LoginAnimatedWidget({
-    @required this.animation,
-  }) : super(listenable: animation);
-
-  @override
-  Widget build(BuildContext context) {
-    return Opacity(
-      opacity: _opacityTween.evaluate(animation),
-      child: Container(
-        margin: EdgeInsets.only(top: _offsetTween.evaluate(animation)),
-        child: _LoginWidget(),
-      ),
-    );
-  }
-}
-
 class _LoginWidget extends StatefulWidget {
   _LoginWidget({Key key}) : super(key: key);
 
@@ -156,7 +135,13 @@ class __LoginWidgetState extends State<_LoginWidget> {
                   Utils.showToatst('请输入账号或者密码');
                   return;
                 }
-                value.login(context, phone, pwd).then((value) {
+                value
+                    .login(
+                  context,
+                  phone,
+                  pwd,
+                )
+                    .then((value) {
                   if (value != null) {
                     Provider.of<PlayListModel>(context).user = value;
                     NavigatorUtil.goHomePage(context);
@@ -169,6 +154,27 @@ class __LoginWidgetState extends State<_LoginWidget> {
           },
         ),
       ],
+    );
+  }
+}
+
+class _LoginAnimatedWidget extends AnimatedWidget {
+  final Tween<double> _opacityTween = Tween(begin: 0, end: 1);
+  final Tween<double> _offsetTween = Tween(begin: 40, end: 0);
+  final Animation animation;
+
+  _LoginAnimatedWidget({
+    @required this.animation,
+  }) : super(listenable: animation);
+
+  @override
+  Widget build(BuildContext context) {
+    return Opacity(
+      opacity: _opacityTween.evaluate(animation),
+      child: Container(
+        margin: EdgeInsets.only(top: _offsetTween.evaluate(animation)),
+        child: _LoginWidget(),
+      ),
     );
   }
 }

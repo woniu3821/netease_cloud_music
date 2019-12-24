@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:netease_cloud_music/application.dart';
 import 'package:netease_cloud_music/model/user.dart';
 import 'package:netease_cloud_music/utils/net_utils.dart';
@@ -23,14 +22,11 @@ class UserModel with ChangeNotifier {
   ///登录
   Future<User> login(BuildContext context, String phone, String pwd) async {
     User user = await NetUtils.login(context, phone, pwd);
+
     if (user.code > 299) {
       Utils.showToatst(user.msg ?? '登录失败，请检查账号密码');
       return null;
     }
-    Fluttertoast.showToast(
-      msg: '登录成功',
-      gravity: ToastGravity.CENTER,
-    );
     Utils.showToatst(user.msg ?? '登录成功');
     _saveUserInfo(user);
     return user;

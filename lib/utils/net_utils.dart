@@ -13,7 +13,7 @@ import 'package:netease_cloud_music/model/hot_search.dart';
 import 'package:netease_cloud_music/model/mv.dart';
 import 'package:netease_cloud_music/model/play_list.dart';
 import 'package:netease_cloud_music/model/recommend.dart';
-import 'package:netease_cloud_music/model/search_result.dart';
+import 'package:netease_cloud_music/model/search_result.dart' hide User;
 import 'package:netease_cloud_music/model/user.dart';
 import 'package:netease_cloud_music/route/navigate_service.dart';
 import 'package:netease_cloud_music/route/routes.dart';
@@ -24,7 +24,7 @@ import 'package:path_provider/path_provider.dart';
 
 class NetUtils {
   static Dio _dio;
-  static final String baseUrl = 'http://127.0.0.1';
+  static final String baseUrl = 'http://172.20.6.82';
 
   static void init() async {
     //获取沙盒路径，用于存储cookie
@@ -75,13 +75,16 @@ class NetUtils {
     });
   }
 
-  ///登录
+  /// 登录
   static Future<User> login(
       BuildContext context, String phone, String password) async {
-    var response = await _get(context, '/login/cellphone',
-        params: {'phone': phone, 'password': password});
+    var response = await _get(context, '/login/cellphone', params: {
+      'phone': phone,
+      'password': password,
+    });
 
     return User.fromJson(response.data);
+    // return User.fromJson({'code': 200, 'msg': '', 'loginType': 1});
   }
 
   static Future<Response> refreshLogin(BuildContext context) async {

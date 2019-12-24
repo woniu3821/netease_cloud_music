@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_cloud_music/application.dart';
 import 'package:netease_cloud_music/model/hot_search.dart';
-import 'package:netease_cloud_music/model/search_result.dart';
 import 'package:netease_cloud_music/pages/search/search_multiple_result_page.dart';
+import 'package:netease_cloud_music/pages/search/search_other_result_page.dart';
 import 'package:netease_cloud_music/utils/net_utils.dart';
 import 'package:netease_cloud_music/utils/utils.dart';
 import 'package:netease_cloud_music/widgets/common_text_style.dart';
@@ -271,8 +271,10 @@ class _SearchPageState extends State<SearchPage> with TickerProviderStateMixin {
                   _search();
                 },
               ),
-              // TODO
-              // ..._searchingTabMap.keys.map((key)=>)
+              ..._searchingTabMap.keys
+                  .map((key) => SearchOtherResultPage(
+                      _searchingTabMap[key].toString(), searchText))
+                  .toList()
             ],
             controller: _searchingTabController,
           ),
