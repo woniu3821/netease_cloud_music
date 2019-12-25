@@ -236,4 +236,67 @@ class _HomePrePageState extends State<DiscoverPage>
       },
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            _buildBanner(),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: ScreenUtil().setWidth(15),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  VEmptyView(40),
+                  _buildHomeCategoryList(),
+                  VEmptyView(20),
+                  Text(
+                    '推荐歌单',
+                    style: commonTextStyle,
+                  ),
+                ],
+              ),
+            ),
+            VEmptyView(20),
+            _buildRecommendPlayList(),
+            VEmptyView(30),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: ScreenUtil().setWidth(15),
+              ),
+              child: Text(
+                '新碟上架',
+                style: commonTextStyle,
+              ),
+            ),
+            VEmptyView(20),
+            _buildNewAlbum(),
+            VEmptyView(30),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: ScreenUtil().setWidth(15),
+              ),
+              child: Text(
+                'MV 排行榜',
+                style: commonTextStyle,
+              ),
+            ),
+            VEmptyView(20),
+            _buildTopMv(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  bool get wantKeepAlive => true;
 }

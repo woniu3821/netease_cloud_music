@@ -149,6 +149,17 @@ class NetUtils {
     return MyPlayListData.fromJson(response.data);
   }
 
+  //删除歌单
+  static Future<PlayListData> deletePlayList(BuildContext context,
+      {@required Map<String, dynamic> params}) async {
+    var response = await _get(
+      context,
+      '/playlist/delete',
+      params: params,
+    );
+    return PlayListData.fromJson(response.data);
+  }
+
   // 获取动态数据
   static Future<prefix0.EventData> getEventData(
       {@required Map<String, dynamic> params}) async {
