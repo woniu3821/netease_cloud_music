@@ -4,8 +4,10 @@ import 'package:netease_cloud_music/model/play_list.dart';
 import 'package:netease_cloud_music/model/recommend.dart';
 import 'package:netease_cloud_music/provider/play_list_model.dart';
 import 'package:netease_cloud_music/utils/navigator_util.dart';
+import 'package:netease_cloud_music/utils/utils.dart';
 import 'package:netease_cloud_music/widgets/common_text_style.dart';
 import 'package:netease_cloud_music/widgets/rounded_net_image.dart';
+import 'package:netease_cloud_music/widgets/widget_play_list_menu.dart';
 import 'package:provider/provider.dart';
 
 class MyPage extends StatefulWidget {
@@ -126,15 +128,33 @@ class _MyPageState extends State<MyPage> with AutomaticKeepAliveClientMixin {
               color: Colors.grey,
               onPressed: () {
                 showModalBottomSheet<Playlist>(
-                    context: context,
-                    builder: (context) {
-                      return PlayList;
-                    });
+                  context: context,
+                  builder: (context) {
+                    return PlayListMenuWidget(curPlayList, _playListModel);
+                  },
+                  backgroundColor: Colors.transparent,
+                ).then((v) {
+                  if (v != null) {
+                    if (v.type == 1) {
+                      Utils.showToatst('删除成功');
+                      _playListModel.delPlayList(curPlayList);
+                    }
+                  }
+                });
               },
             ),
           ),
         );
       },
+      itemCount: data.length,
+    );
+  }
+
+  Widget _realBuildPlayList() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[],
     );
   }
 

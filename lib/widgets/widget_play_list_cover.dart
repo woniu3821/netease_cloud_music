@@ -24,9 +24,10 @@ class PlayListCoverWidget extends StatelessWidget {
         child: Stack(
           alignment: Alignment.topRight,
           children: <Widget>[
-            Utils.showNetImage(url,
+            Utils.showNetImage('$url?params=200y200',
                 width: ScreenUtil().setWidth(width),
-                height: ScreenUtil().setWidth(height ?? width)),
+                height: ScreenUtil().setWidth(height ?? width),
+                fit: BoxFit.cover),
             playCount == null
                 ? Container()
                 : Padding(

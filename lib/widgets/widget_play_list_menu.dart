@@ -5,6 +5,7 @@ import 'package:netease_cloud_music/provider/play_list_model.dart';
 import 'package:netease_cloud_music/utils/net_utils.dart';
 import 'package:netease_cloud_music/utils/utils.dart';
 import 'package:netease_cloud_music/widgets/common_text_style.dart';
+import 'package:netease_cloud_music/widgets/widget_edit_play_list.dart';
 
 class PlayListMenuWidget extends StatefulWidget {
   final Playlist _playlist;
@@ -79,10 +80,14 @@ class _PlayListMenuWidgetState extends State<PlayListMenuWidget> {
                 widget._model.user.account.id,
             child: _buildMenuItem('images/icon_edit.png', '编辑歌单信息', () {
               showDialog(
-                  context: context,
-                  builder: (context) {
-                    // return EditPlayListWidget(
-                  });
+                context: context,
+                builder: (context) {
+                  return EditPlayListWidget(
+                    submitCallBack: (String name, String desc) {},
+                    playlist: widget._playlist,
+                  );
+                },
+              );
             }),
           ),
           Offstage(

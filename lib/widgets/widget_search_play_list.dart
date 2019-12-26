@@ -39,7 +39,7 @@ class SearchPlayListWidget extends StatelessWidget {
         child: Row(
           children: <Widget>[
             RoundedNetImage(
-              url,
+              '$url?param=150y150',
               width: width,
               height: width,
               radius: 8,

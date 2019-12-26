@@ -19,7 +19,7 @@ class SearchUserWidget extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: ScreenUtil().setWidth(10)),
       child: Row(
         children: <Widget>[
-          RoundImgWidget(url, 140),
+          RoundImgWidget('$url?param=150y150', 140),
           HEmptyView(10),
           Expanded(
             child: Column(
