@@ -1,12 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_cloud_music/model/play_list.dart';
 import 'package:netease_cloud_music/model/recommend.dart';
+import 'package:netease_cloud_music/pages/home/my/playlist_title.dart';
 import 'package:netease_cloud_music/provider/play_list_model.dart';
 import 'package:netease_cloud_music/utils/navigator_util.dart';
+import 'package:netease_cloud_music/utils/net_utils.dart';
 import 'package:netease_cloud_music/utils/utils.dart';
 import 'package:netease_cloud_music/widgets/common_text_style.dart';
 import 'package:netease_cloud_music/widgets/rounded_net_image.dart';
+import 'package:netease_cloud_music/widgets/widget_create_play_list.dart';
 import 'package:netease_cloud_music/widgets/widget_play_list_menu.dart';
 import 'package:provider/provider.dart';
 
@@ -83,6 +87,7 @@ class _MyPageState extends State<MyPage> with AutomaticKeepAliveClientMixin {
           height: ScreenUtil().setWidth(0.3),
         );
       },
+      itemCount: 5,
     );
   }
 
@@ -154,15 +159,104 @@ class _MyPageState extends State<MyPage> with AutomaticKeepAliveClientMixin {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[],
+      children: <Widget>[
+        PlaylistTile(
+          "创建的歌单",
+          _playListModel.selfCreatePlayList.length,
+          () {
+            setState(() {
+              selfPlayListOffstage = !selfPlayListOffstage;
+            });
+          },
+          () {},
+          trailing: SizedBox(
+            height: ScreenUtil().setWidth(50),
+            width: ScreenUtil().setWidth(70),
+            child: IconButton(
+              icon: Icon(
+                Icons.add,
+                color: Colors.black87,
+              ),
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return CreatePlayListWidget(
+                        submitCallBack: (name, isPrivate) {
+                          _createPlaylist(name, isPrivate);
+                        },
+                      );
+                    });
+              },
+              padding: EdgeInsets.zero,
+            ),
+          ),
+        ),
+        Offstage(
+          offstage: selfPlayListOffstage,
+          child: _buildPlayListItem(_playListModel.selfCreatePlayList),
+        ),
+        PlaylistTile('收藏的歌单', _playListModel.collectPlayList.length, () {
+          setState(() {
+            collectPlayListOffstage = !collectPlayListOffstage;
+          });
+        }, () {}),
+        Offstage(
+          offstage: collectPlayListOffstage,
+          child: _buildPlayListItem(_playListModel.collectPlayList),
+        ),
+      ],
     );
+  }
+
+  //构建歌单
+  Widget _buildPlayList() {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: ScreenUtil().setWidth(20),
+      ),
+      child: _realBuildPlayList(),
+    );
+  }
+
+  //创建歌单
+
+  void _createPlaylist(String name, bool isPrivate) async {
+    NetUtils.createPlaylist(context,
+            params: {'name': name, 'privacy': isPrivate ? '10' : null})
+        .catchError((e) {
+      Utils.showToatst("创建失败");
+    }).then((result) {
+      Utils.showToatst("创建成功");
+      Navigator.of(context).pop();
+      _playListModel.addPlayList(result.playlist
+        ..creator = _playListModel.selfCreatePlayList[0].creator);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Container(
-      child: child,
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            _buildTopMenu(),
+            Container(
+              color: Color(0xfff5f5f5),
+              height: ScreenUtil().setWidth(25),
+            ),
+            _playListModel == null
+                ? Container(
+                    height: ScreenUtil().setWidth(400),
+                    alignment: Alignment.center,
+                    child: CupertinoActivityIndicator(),
+                  )
+                : _buildPlayList(),
+          ],
+        ),
+      ),
     );
   }
 

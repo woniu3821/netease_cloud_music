@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_cloud_music/application.dart';
 import 'package:netease_cloud_music/pages/home/discover/discover_page.dart';
+import 'package:netease_cloud_music/pages/home/my/my_page.dart';
 import 'package:netease_cloud_music/utils/navigator_util.dart';
 import 'package:netease_cloud_music/widgets/v_empty_view.dart';
 
@@ -87,7 +88,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       controller: _tabController,
                       children: <Widget>[
                         DiscoverPage(),
-                        // MyPage(),
+                        MyPage(),
+                        //TODO
+
                         // EventPage(),
                       ],
                     ),
