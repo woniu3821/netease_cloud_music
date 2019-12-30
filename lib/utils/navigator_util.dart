@@ -2,7 +2,9 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:netease_cloud_music/application.dart';
 import 'package:netease_cloud_music/model/recommend.dart';
+import 'package:netease_cloud_music/pages/look_img_page.dart';
 import 'package:netease_cloud_music/route/routes.dart';
+import 'package:netease_cloud_music/route/transparent_route.dart';
 import 'package:netease_cloud_music/utils/fluro_convert_utils.dart';
 
 class NavigatorUtil {
@@ -64,5 +66,16 @@ class NavigatorUtil {
   //搜索页面
   static void goSearchPage(BuildContext context) {
     _navigateTo(context, Routes.search);
+  }
+
+  //查看图片页面
+  static void goLookImgPage(
+      BuildContext context, List<String> imgs, int index) {
+    Navigator.push(
+      context,
+      TransparentRoute(
+        builder: (_) => LookImgPage(imgs, index),
+      ),
+    );
   }
 }
