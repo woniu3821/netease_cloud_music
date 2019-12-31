@@ -24,7 +24,7 @@ import 'package:path_provider/path_provider.dart';
 
 class NetUtils {
   static Dio _dio;
-  static final String baseUrl = 'http://172.20.6.82';
+  static final String baseUrl = 'http://172.20.6.52';
 
   static void init() async {
     //获取沙盒路径，用于存储cookie
@@ -128,7 +128,7 @@ class NetUtils {
   }
 
   //每日推荐歌曲
-  static Future<DailySongsData> getDailySongData(BuildContext context) async {
+  static Future<DailySongsData> getDailySongsData(BuildContext context) async {
     var response = await _get(
       context,
       '/recommend/songs',

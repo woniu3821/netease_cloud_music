@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:loading_more_list/loading_more_list.dart';
 import 'package:netease_cloud_music/model/event.dart';
 import 'package:netease_cloud_music/model/event_content.dart';
+import 'package:netease_cloud_music/model/song.dart' as prefix0;
 import 'package:netease_cloud_music/utils/event_special_text_span_builder.dart';
 import 'package:netease_cloud_music/utils/navigator_util.dart';
 import 'package:netease_cloud_music/utils/utils.dart';
@@ -16,6 +17,8 @@ import 'package:netease_cloud_music/widgets/common_text_style.dart';
 import 'package:netease_cloud_music/widgets/h_empty_view.dart';
 import 'package:netease_cloud_music/widgets/rounded_net_image.dart';
 import 'package:netease_cloud_music/widgets/v_empty_view.dart';
+import 'package:netease_cloud_music/widgets/widget_event_song.dart';
+import 'package:netease_cloud_music/widgets/widget_event_video.dart';
 import 'package:netease_cloud_music/widgets/widget_round_img.dart';
 
 class EventPage extends StatefulWidget {
@@ -308,11 +311,15 @@ class _EventPageState extends State<EventPage>
                 break;
               case 39:
                 curContent = EventContent.fromJson(jsonDecode(curData.json));
-                //TODO
-                // contentWidget=EventVideoWidget();
+                contentWidget = EventVideoWidget(curContent.video);
                 break;
               case 18:
                 curContent = EventContent.fromJson(jsonDecode(curData.json));
+                contentWidget = EventSongWidget(prefix0.Song(curContent.song.id,
+                    name: curContent.song.name,
+                    picUrl: curContent.song.album.picUrl,
+                    artists:
+                        curContent.song.artists.map((a) => a.name).join('/')));
                 break;
 
               default:

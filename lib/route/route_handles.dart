@@ -2,10 +2,15 @@
 
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:netease_cloud_music/model/daily_songs.dart';
+import 'package:netease_cloud_music/pages/daily_songs/daily_songs_page.dart';
 import 'package:netease_cloud_music/pages/home/home_page.dart';
 import 'package:netease_cloud_music/pages/login_page.dart';
+import 'package:netease_cloud_music/pages/look_img_page.dart';
+import 'package:netease_cloud_music/pages/play_list/play_list_page.dart';
 import 'package:netease_cloud_music/pages/search/search_page.dart';
 import 'package:netease_cloud_music/pages/splash_page.dart';
+import 'package:netease_cloud_music/utils/fluro_convert_utils.dart';
 
 //首屏splash
 var splashHandler = new Handler(
@@ -25,9 +30,38 @@ var homeHandler = new Handler(
   return HomePage();
 });
 
-// 跳转到搜索页面
+// 跳转到每日推荐歌曲
+var dailySongsHandler = new Handler(
+    handlerFunc: (BuildContext context, Map<String, List<Object>> params) {
+  return DailySongsPage();
+});
 
+// 跳转到歌单
+var playListHandler = new Handler(
+    handlerFunc: (BuildContext context, Map<String, List<Object>> params) {
+  String data = params['data'].first;
+
+  return PlayListPage(Recommend.fromJson(FluroConvertUtils.string2map(data)));
+});
+
+// 跳转到播放歌曲
+var playSongsHandler = new Handler(
+    handlerFunc: (BuildContext context, Map<String, List<Object>> params) {
+  return;
+});
+
+// 跳转到搜索页面
 var searchHandler = new Handler(
     handlerFunc: (BuildContext context, Map<String, List<Object>> params) {
   return SearchPage();
+});
+
+// 跳转到查看图片页面
+
+var lookImgHandler = new Handler(
+    handlerFunc: (BuildContext context, Map<String, List<Object>> params) {
+  List<String> imgs =
+      FluroConvertUtils.fluroCnParamsDecode(params['imgs'].first).split(',');
+  String index = params['index'].first;
+  return LookImgPage(imgs, int.parse(index));
 });

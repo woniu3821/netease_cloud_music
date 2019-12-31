@@ -11,6 +11,7 @@ class Routes {
   static String topList = "/top_list";
   static String playSongs = "/play_songs";
   static String search = "/search";
+  static String lookImg = "/look_img";
 
   static void configureRoutes(Router router) {
     router.notFoundHandler = new Handler(
@@ -22,6 +23,10 @@ class Routes {
     router.define(root, handler: splashHandler);
     router.define(login, handler: loginHandler);
     router.define(home, handler: homeHandler);
+    router.define(dailySongs, handler: dailySongsHandler);
+    router.define(playList, handler: playListHandler);
+    router.define(playSongs, handler: playSongsHandler);
     router.define(search, handler: searchHandler);
+    router.define(lookImg, handler: lookImgHandler);
   }
 }

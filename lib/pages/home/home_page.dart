@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_cloud_music/application.dart';
 import 'package:netease_cloud_music/pages/home/discover/discover_page.dart';
+import 'package:netease_cloud_music/pages/home/event/event_page.dart';
 import 'package:netease_cloud_music/pages/home/my/my_page.dart';
 import 'package:netease_cloud_music/utils/navigator_util.dart';
 import 'package:netease_cloud_music/widgets/v_empty_view.dart';
+import 'package:netease_cloud_music/widgets/widget_play.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -89,9 +91,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       children: <Widget>[
                         DiscoverPage(),
                         MyPage(),
-                        //TODO
-
-                        // EventPage(),
+                        EventPage(),
                       ],
                     ),
                   ),
@@ -101,8 +101,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   bottom:
                       ScreenUtil().setWidth(80) + Application.bottomBarHeight),
             ),
-            // TODO
-            // PlayWidget(),
+            PlayWidget(),
           ],
         ),
       ),
