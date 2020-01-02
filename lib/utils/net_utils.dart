@@ -14,6 +14,7 @@ import 'package:netease_cloud_music/model/mv.dart';
 import 'package:netease_cloud_music/model/play_list.dart';
 import 'package:netease_cloud_music/model/recommend.dart';
 import 'package:netease_cloud_music/model/search_result.dart' hide User;
+import 'package:netease_cloud_music/model/top_list.dart';
 import 'package:netease_cloud_music/model/user.dart';
 import 'package:netease_cloud_music/route/navigate_service.dart';
 import 'package:netease_cloud_music/route/routes.dart';
@@ -109,6 +110,12 @@ class NetUtils {
     return RecommendData.fromJson(response.data);
   }
 
+  // 排行榜首页
+  static Future<TopListData> getTopListData(BuildContext context) async {
+    var response = await _get(context, '/toplist/detail');
+    return TopListData.fromJson(response.data);
+  }
+
   //新碟上架
   static Future<AlbumData> getAlbumData(
     BuildContext context, {
@@ -134,6 +141,16 @@ class NetUtils {
       '/recommend/songs',
     );
     return DailySongsData.fromJson(response.data);
+  }
+
+  // 歌单详情
+  static Future<PlayListData> getPlayListData(
+    BuildContext context, {
+    Map<String, dynamic> params,
+  }) async {
+    var response = await _get(context, '/playlist/detail', params: params);
+
+    return PlayListData.fromJson(response.data);
   }
 
   /// 获取个人歌单

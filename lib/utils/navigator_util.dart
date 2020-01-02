@@ -1,6 +1,7 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:netease_cloud_music/application.dart';
+import 'package:netease_cloud_music/model/comment_head.dart';
 import 'package:netease_cloud_music/model/recommend.dart';
 import 'package:netease_cloud_music/pages/look_img_page.dart';
 import 'package:netease_cloud_music/route/routes.dart';
@@ -66,6 +67,13 @@ class NavigatorUtil {
   //搜索页面
   static void goSearchPage(BuildContext context) {
     _navigateTo(context, Routes.search);
+  }
+
+  //评论页面
+  static void goCommentPage(BuildContext context,
+      {@required CommentHead data}) {
+    _navigateTo(context,
+        '${Routes.comment}?data=${FluroConvertUtils.object2string(data)}');
   }
 
   //查看图片页面
