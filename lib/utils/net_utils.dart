@@ -10,6 +10,7 @@ import 'package:netease_cloud_music/model/banner.dart' as mBanner;
 import 'package:netease_cloud_music/model/daily_songs.dart';
 import 'package:netease_cloud_music/model/event.dart' as prefix0;
 import 'package:netease_cloud_music/model/hot_search.dart';
+import 'package:netease_cloud_music/model/lyric.dart';
 import 'package:netease_cloud_music/model/mv.dart';
 import 'package:netease_cloud_music/model/play_list.dart';
 import 'package:netease_cloud_music/model/recommend.dart';
@@ -141,6 +142,18 @@ class NetUtils {
       '/recommend/songs',
     );
     return DailySongsData.fromJson(response.data);
+  }
+
+  //获取歌词
+  static Future<LyricData> getLyricData(BuildContext context,
+      {@required Map<String, dynamic> params}) async {
+    var response = await _get(
+      context,
+      '/lyric',
+      params: params,
+      isShowLoading: false,
+    );
+    return LyricData.fromJson(response.data);
   }
 
   // 歌单详情
