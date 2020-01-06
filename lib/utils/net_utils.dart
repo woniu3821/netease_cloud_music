@@ -15,6 +15,7 @@ import 'package:netease_cloud_music/model/mv.dart';
 import 'package:netease_cloud_music/model/play_list.dart';
 import 'package:netease_cloud_music/model/recommend.dart';
 import 'package:netease_cloud_music/model/search_result.dart' hide User;
+import 'package:netease_cloud_music/model/song_comment.dart' hide User;
 import 'package:netease_cloud_music/model/top_list.dart';
 import 'package:netease_cloud_music/model/user.dart';
 import 'package:netease_cloud_music/route/navigate_service.dart';
@@ -133,6 +134,20 @@ class NetUtils {
   }) async {
     var response = await _get(context, '/top/mv', params: params);
     return MVData.fromJson(response.data);
+  }
+
+  //获取评论列表
+  static Future<SongCommentData> getSongCommentData(
+    BuildContext context, {
+    @required Map<String, dynamic> params,
+  }) async {
+    var response = await _get(
+      context,
+      '/comment/music',
+      params: params,
+      isShowLoading: false,
+    );
+    return SongCommentData.fromJson(response.data);
   }
 
   //每日推荐歌曲

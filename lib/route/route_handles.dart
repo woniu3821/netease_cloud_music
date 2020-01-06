@@ -8,6 +8,7 @@ import 'package:netease_cloud_music/pages/home/home_page.dart';
 import 'package:netease_cloud_music/pages/login_page.dart';
 import 'package:netease_cloud_music/pages/look_img_page.dart';
 import 'package:netease_cloud_music/pages/play_list/play_list_page.dart';
+import 'package:netease_cloud_music/pages/play_songs/play_songs_page.dart';
 import 'package:netease_cloud_music/pages/search/search_page.dart';
 import 'package:netease_cloud_music/pages/splash_page.dart';
 import 'package:netease_cloud_music/pages/top_list/top_list_page.dart';
@@ -54,8 +55,7 @@ var topListHandler = new Handler(
 // 跳转到播放歌曲
 var playSongsHandler = new Handler(
     handlerFunc: (BuildContext context, Map<String, List<Object>> params) {
-  //TODO
-  return;
+  return PlaySongsPage();
 });
 
 // 跳转到搜索页面

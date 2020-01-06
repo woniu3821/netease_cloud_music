@@ -12,12 +12,19 @@ class CustomFutureBuilder<T> extends StatefulWidget {
   final ValueWidgetBuilder<T> builder;
   final Function futureFunc;
   final Map<String, dynamic> params;
+  final Widget loadingWidget;
 
   CustomFutureBuilder({
     @required this.futureFunc,
     @required this.builder,
     this.params,
-  });
+    Widget loadingWidget,
+  }) : loadingWidget = loadingWidget ??
+            Container(
+              alignment: Alignment.center,
+              height: ScreenUtil().setWidth(200),
+              child: CupertinoActivityIndicator(),
+            );
 
   @override
   _CustomFutureBuilderState<T> createState() => _CustomFutureBuilderState<T>();
@@ -47,11 +54,7 @@ class _CustomFutureBuilderState<T> extends State<CustomFutureBuilder<T>> {
   @override
   Widget build(BuildContext context) {
     return _future == null
-        ? Container(
-            alignment: Alignment.center,
-            height: ScreenUtil().setWidth(200),
-            child: CupertinoActivityIndicator(),
-          )
+        ? widget.loadingWidget
         : FutureBuilder(
             future: _future,
             builder: (context, snapshot) {
@@ -59,11 +62,7 @@ class _CustomFutureBuilderState<T> extends State<CustomFutureBuilder<T>> {
                 case ConnectionState.none:
                 case ConnectionState.waiting:
                 case ConnectionState.active:
-                  return Container(
-                    alignment: Alignment.center,
-                    height: ScreenUtil().setWidth(200),
-                    child: CupertinoActivityIndicator(),
-                  );
+                  return widget.loadingWidget;
                 case ConnectionState.done:
                   if (snapshot.hasData) {
                     return widget.builder(context, snapshot.data);

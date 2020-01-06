@@ -5,11 +5,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netease_cloud_music/application.dart';
+import 'package:netease_cloud_music/model/comment_head.dart';
+import 'package:netease_cloud_music/model/song_comment.dart';
+import 'package:netease_cloud_music/pages/comment/comment_type.dart';
+import 'package:netease_cloud_music/pages/play_songs/lyric_page.dart';
 import 'package:netease_cloud_music/provider/play_songs_model.dart';
+import 'package:netease_cloud_music/utils/navigator_util.dart';
+import 'package:netease_cloud_music/utils/net_utils.dart';
+import 'package:netease_cloud_music/utils/number_utils.dart';
 import 'package:netease_cloud_music/utils/utils.dart';
 import 'package:netease_cloud_music/widgets/common_text_style.dart';
-import 'package:netease_cloud_music/widgets/rounded_net_image.dart';
+import 'package:netease_cloud_music/widgets/v_empty_view.dart';
+import 'package:netease_cloud_music/widgets/widget_future_builder.dart';
+import 'package:netease_cloud_music/widgets/widget_img_menu.dart';
+import 'package:netease_cloud_music/widgets/widget_play_bottom_menu.dart';
 import 'package:netease_cloud_music/widgets/widget_round_img.dart';
+import 'package:netease_cloud_music/widgets/widget_song_progress.dart';
 import 'package:provider/provider.dart';
 
 class PlaySongsPage extends StatefulWidget {
@@ -162,14 +173,21 @@ class _PlaySongsPageState extends State<PlaySongsPage>
                                   ),
                                   alignment: Alignment(0.25, -1),
                                 ),
-                                //TODO
-                                // LyricWidget(),
                               ],
                             ),
+                            LyricPage(model),
                           ],
                         ),
                       ),
                     ),
+                    buildSongsHandle(model),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: ScreenUtil().setWidth(30)),
+                      child: SongProgressWidget(model),
+                    ),
+                    PlayBottomMenuWidget(model),
+                    VEmptyView(20),
                   ],
                 ),
               ),
@@ -178,5 +196,83 @@ class _PlaySongsPageState extends State<PlaySongsPage>
         );
       },
     );
+  }
+
+  Widget buildSongsHandle(PlaySongsModel model) {
+    return Container(
+      height: ScreenUtil().setWidth(100),
+      child: Row(
+        children: <Widget>[
+          ImageMenuWidget('images/icon_dislike.png', 80),
+          ImageMenuWidget(
+            'images/icon_song_download.png',
+            80,
+            onTap: () {},
+          ),
+          Expanded(
+            child: Align(
+              child: Container(
+                width: ScreenUtil().setWidth(130),
+                height: ScreenUtil().setWidth(80),
+                child: CustomFutureBuilder<SongCommentData>(
+                  futureFunc: NetUtils.getSongCommentData,
+                  params: {'id': model.curSong.id, 'offset': 1},
+                  loadingWidget: Image.asset(
+                    'images/icon_song_comment.png',
+                    width: ScreenUtil().setWidth(80),
+                    height: ScreenUtil().setWidth(80),
+                  ),
+                  builder: (context, data) {
+                    return GestureDetector(
+                      onTap: () {
+                        NavigatorUtil.goCommentPage(context,
+                            data: CommentHead(
+                                model.curSong.picUrl,
+                                model.curSong.name,
+                                model.curSong.artists,
+                                data.total,
+                                model.curSong.id,
+                                CommentType.song.index));
+                      },
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: <Widget>[
+                          Image.asset(
+                            'images/icon_song_comment.png',
+                            width: ScreenUtil().setWidth(80),
+                            height: ScreenUtil().setWidth(80),
+                          ),
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: Container(
+                              margin: EdgeInsets.only(
+                                top: ScreenUtil().setWidth(12),
+                              ),
+                              width: ScreenUtil().setWidth(58),
+                              child: Text(
+                                '${NumberUtils.formatNum(data.total)}',
+                                style: common10White70TextStyle,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
+          ImageMenuWidget('images/icon_song_more.png', 80),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _stylusController.dispose();
+    super.dispose();
   }
 }
