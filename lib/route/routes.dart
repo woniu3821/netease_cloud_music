@@ -27,6 +27,7 @@ class Routes {
     router.define(dailySongs, handler: dailySongsHandler);
     router.define(playList, handler: playListHandler);
     router.define(playSongs, handler: playSongsHandler);
+    router.define(comment, handler: commentHandler);
     router.define(search, handler: searchHandler);
     router.define(lookImg, handler: lookImgHandler);
     router.define(topList, handler: topListHandler);

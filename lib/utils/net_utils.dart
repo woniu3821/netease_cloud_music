@@ -136,7 +136,7 @@ class NetUtils {
     return MVData.fromJson(response.data);
   }
 
-  //获取评论列表
+  //获取歌曲评论列表
   static Future<SongCommentData> getSongCommentData(
     BuildContext context, {
     @required Map<String, dynamic> params,
@@ -147,6 +147,40 @@ class NetUtils {
       params: params,
       isShowLoading: false,
     );
+    return SongCommentData.fromJson(response.data);
+  }
+
+  //获取评论列表
+  static Future<SongCommentData> getCommentData(
+    BuildContext context,
+    int type, {
+    @required Map<String, dynamic> params,
+  }) async {
+    var funcName;
+
+    switch (type) {
+      case 0:
+        funcName = "music";
+        break;
+      case 1:
+        funcName = "mv";
+        break;
+      case 2:
+        funcName = "playlist";
+        break;
+      case 3:
+        funcName = "album";
+        break;
+      case 4:
+        funcName = "dj";
+        break;
+      case 5:
+        funcName = "video";
+        break;
+    }
+
+    var response = await _get(context, '/comment/$funcName',
+        params: params, isShowLoading: false);
     return SongCommentData.fromJson(response.data);
   }
 

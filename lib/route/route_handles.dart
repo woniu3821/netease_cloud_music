@@ -2,7 +2,9 @@
 
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:netease_cloud_music/model/comment_head.dart';
 import 'package:netease_cloud_music/model/recommend.dart';
+import 'package:netease_cloud_music/pages/comment/comment_page.dart';
 import 'package:netease_cloud_music/pages/daily_songs/daily_songs_page.dart';
 import 'package:netease_cloud_music/pages/home/home_page.dart';
 import 'package:netease_cloud_music/pages/login_page.dart';
@@ -56,6 +58,12 @@ var topListHandler = new Handler(
 var playSongsHandler = new Handler(
     handlerFunc: (BuildContext context, Map<String, List<Object>> params) {
   return PlaySongsPage();
+});
+
+var commentHandler = new Handler(
+    handlerFunc: (BuildContext context, Map<String, List<Object>> params) {
+  String data = params['data'].first;
+  return CommentPage(CommentHead.fromJson(FluroConvertUtils.string2map(data)));
 });
 
 // 跳转到搜索页面
