@@ -27,7 +27,7 @@ import 'package:path_provider/path_provider.dart';
 
 class NetUtils {
   static Dio _dio;
-  static final String baseUrl = 'http://172.20.6.52';
+  static final String baseUrl = 'http://172.20.6.60';
 
   static void init() async {
     //获取沙盒路径，用于存储cookie
@@ -181,6 +181,18 @@ class NetUtils {
 
     var response = await _get(context, '/comment/$funcName',
         params: params, isShowLoading: false);
+    return SongCommentData.fromJson(response.data);
+  }
+
+  //发表评论
+
+  static Future<SongCommentData> sendComment(BuildContext context,
+      {@required Map<String, dynamic> params}) async {
+    var response = await _get(
+      context,
+      '/comment',
+      params: params,
+    );
     return SongCommentData.fromJson(response.data);
   }
 
